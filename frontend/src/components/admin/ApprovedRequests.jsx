@@ -49,12 +49,12 @@ const ApprovedRequests = () => {
               <td>{request.request_id}</td>
               <td>{request.bicycle_name}</td>
               <td>{request.user_id}</td>
-              <td>{request.approved_by_admin_id_rent}</td>
-              <td>{request.approved_by_admin_id_return}</td>
-              <td>{new Date(request.request_approved_time_rent).toLocaleString()}</td>
-              <td>{new Date(request.request_approved_time_return).toLocaleString()}</td>
+              <td>{request.rent_approved_by_admin_id}</td>
+              <td>{request.return_approved_by_admin_id}</td>
+              <td>{new Date(request.rent_approved_time).toLocaleString()}</td>
+              <td>{new Date(request.return_approved_time).toLocaleString()}</td>
               <td>{request.cost_per_hour}</td>
-              <td>{request.total_cost_paid}</td>
+              <td>{request.rental_cost}</td>
             </tr>
           ))}
         </tbody>

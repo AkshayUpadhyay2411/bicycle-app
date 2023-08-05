@@ -17,6 +17,24 @@ function RentCompleteInfo() {
       console.error("Error fetching completed rentals:", error);
     }
   };
+  const convertTimestampToDateTime = (timestamp) => {
+    // Create a new Date object from the timestamp (in milliseconds)
+    const date = new Date(timestamp);
+  
+    // Get the year, month, day, hours, minutes, and seconds from the date object
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1 and pad with leading zero if necessary
+    const day = String(date.getDate()).padStart(2, '0'); // Pad with leading zero if necessary
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+  
+    // Combine the year, month, day, hours, minutes, and seconds to form the date-time string in the format "YYYY-MM-DD HH:MM:SS"
+    const dateTimeString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  
+    return dateTimeString;
+  };
+
 
   return (
     <Container>
@@ -37,9 +55,9 @@ function RentCompleteInfo() {
             <tr key={rental.rental_id}>
               <td>{rental.rental_id}</td>
               <td>{rental.user_id}</td>
-              <td>{rental.start_date}</td>
-              <td>{rental.end_date}</td>
-              <td>{rental.total_cost}</td>
+              <td>{convertTimestampToDateTime(rental.rental_start_date)}</td>
+              <td>{convertTimestampToDateTime(rental.rental_end_date)}</td>
+              <td>{rental.rental_cost}</td>
               {/* Add more columns as needed */}
             </tr>
           ))}

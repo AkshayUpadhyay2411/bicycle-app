@@ -27,6 +27,7 @@ function PendingRequests() {
           <tr>
             <th>Request ID</th>
             <th>Bicycle Name</th>
+            <th>Cost Per Hour</th>
             <th>Request Status</th>
             {/* Add more columns here as needed */}
           </tr>
@@ -35,7 +36,9 @@ function PendingRequests() {
           {pendingRequests.map((request) => (
             <tr key={request.request_id}>
               <td>{request.request_id}</td>
-              <td>{request.bicycle_id}</td>
+              {/* <td>{request.bicycle_id}</td> */}
+              <td>{request.bicycle_name}</td>
+              <td>{request.cost_per_hour}</td>
               <td>{request.request_status}</td>
               {/* Add more columns here as needed */}
             </tr>

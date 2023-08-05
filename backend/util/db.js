@@ -105,9 +105,9 @@ const updateRentRequestStatus = (
     WHERE request_id = '${requestId}'`;
 };
 
-const getRentRequestsDataPending = () => {
-  return 'SELECT * FROM rent_requests WHERE request_status="Pending" ORDER BY request_date DESC';
-};
+// const getRentRequestsDataPending = () => {
+//   return 'SELECT * FROM rent_requests WHERE request_status="Pending" ORDER BY request_date DESC';
+// };
 
 // RENTALS ------------------------------------------
 
@@ -116,12 +116,18 @@ const createRentalsTable = () => {
     rental_id VARCHAR(255) PRIMARY KEY NOT NULL,
     user_id INT,
     bicycle_id VARCHAR(255),
+
+    request_id VARCHAR(255), 
+
     rental_start_date BIGINT,
     rental_end_date BIGINT,
     rental_cost DECIMAL(10, 2) DEFAULT 0,
     status ENUM('rented', 'completed') NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (bicycle_id) REFERENCES bicycles (bicycle_id)
+    FOREIGN KEY (bicycle_id) REFERENCES bicycles (bicycle_id),
+
+    FOREIGN KEY (request_id) REFERENCES rent_requests (request_id)
+
   )`;
 };
 
@@ -129,15 +135,23 @@ const insertIntoRentalsTable = (
   rentalId,
   userId,
   bicycleId,
+
+  requestId, 
+
   rentalStartDate,
   rentalEndDate,
   rentalCost,
   rentalStatus
 ) => {
-  return `INSERT INTO rentals 
-    (rental_id, user_id, bicycle_id, rental_start_date, rental_end_date, rental_cost, status) 
+//   return `INSERT INTO rentals 
+//     (rental_id, user_id, bicycle_id, rental_start_date, rental_end_date, rental_cost, status) 
+//     VALUES 
+//     ('${rentalId}', ${userId}, '${bicycleId}', ${rentalStartDate}, ${rentalEndDate}, ${rentalCost}, '${rentalStatus}')`;
+// };
+return `INSERT INTO rentals 
+    (rental_id, user_id, bicycle_id, request_id, rental_start_date, rental_end_date, rental_cost, status) 
     VALUES 
-    ('${rentalId}', ${userId}, '${bicycleId}', ${rentalStartDate}, ${rentalEndDate}, ${rentalCost}, '${rentalStatus}')`;
+    ('${rentalId}', ${userId}, '${bicycleId}', '${requestId}', ${rentalStartDate}, ${rentalEndDate}, ${rentalCost}, '${rentalStatus}')`;
 };
 
 
@@ -200,7 +214,7 @@ export {
   createRentRequestsTable,
   insertIntoRentRequestsTable,
   updateRentRequestStatus,
-  getRentRequestsDataPending,
+  // getRentRequestsDataPending,
 
   createRentalsTable,
   insertIntoRentalsTable,

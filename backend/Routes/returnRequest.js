@@ -172,9 +172,14 @@ router.get("/getPendingReturnRequestUser", verifyJwtToken, async (req, res) => {
       const [returnRequests] = await connection
         .promise()
         .query(
-          `SELECT return_requests.*
+          // `SELECT return_requests.*
+          // FROM return_requests
+          // JOIN rentals ON return_requests.rental_id = rentals.rental_id
+          // WHERE return_requests.return_status = 'Pending' AND rentals.user_id = '${userId}';`
+          `SELECT return_requests.*, bicycles.bicycle_name, bicycles.cost_per_hour
           FROM return_requests
           JOIN rentals ON return_requests.rental_id = rentals.rental_id
+          JOIN bicycles ON rentals.bicycle_id = bicycles.bicycle_id
           WHERE return_requests.return_status = 'Pending' AND rentals.user_id = '${userId}';`
         );
 
@@ -200,7 +205,17 @@ router.get( "/getPendingReturnRequestAdmin", verifyJwtToken, verifyAdmin, async 
       try {
         const [returnRequests] = await connection
           .promise()
-          .query('SELECT * FROM return_requests WHERE return_status="Pending" ORDER BY request_created_time DESC');
+          // .query('SELECT * FROM return_requests WHERE return_status="Pending" ORDER BY request_created_time DESC');
+          .query(
+
+            `SELECT return_requests.*, bicycles.bicycle_id, bicycles.bicycle_name, rentals.user_id
+          FROM return_requests
+          JOIN rentals ON return_requests.rental_id = rentals.rental_id
+          JOIN bicycles ON rentals.bicycle_id = bicycles.bicycle_id
+          WHERE return_requests.return_status = 'Pending'
+          ORDER BY return_requests.request_created_time DESC`
+
+          )
 
         return res
           .status(200)
@@ -227,7 +242,33 @@ router.get("/getApprovedReturnRequests", verifyJwtToken, verifyAdmin, async (req
       const [approvedReturnRequests] = await connection
         .promise()
         .query(`
-           
+        SELECT
+        return_requests.return_id,
+        return_requests.rental_id,
+        return_requests.return_status,
+        return_requests.request_created_time as return_created_time,
+        return_requests.request_approved_time as return_approved_time,
+        return_requests.approved_by_admin_id as return_approved_by_admin_id,
+        rent_requests.approved_by_admin_id as rent_approved_by_admin_id,
+        rent_requests.request_date as rent_created_time,
+        rent_requests.request_approved_time as rent_approved_time,
+        rentals.user_id,
+        rentals.bicycle_id,
+        rentals.rental_cost,
+        rent_requests.request_id,
+        users.firstName,
+        users.lastName,
+        users.username,
+        bicycles.bicycle_name,
+        bicycles.cost_per_hour
+      FROM
+        return_requests
+        JOIN rentals ON return_requests.rental_id = rentals.rental_id
+        JOIN rent_requests ON rentals.request_id = rent_requests.request_id
+        JOIN users ON rentals.user_id = users.id
+        JOIN bicycles ON rentals.bicycle_id = bicycles.bicycle_id
+      WHERE
+        return_requests.return_status = 'Approved'
       `);
 
 

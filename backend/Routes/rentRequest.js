@@ -3,7 +3,7 @@ import {
   db,
   insertIntoRentRequestsTable,
   updateRentRequestStatus,
-  getRentRequestsDataPending,
+  // getRentRequestsDataPending,
   insertIntoRentalsTable,
 } from "../util/db.js";
 
@@ -60,7 +60,19 @@ router.get("/getPendingRentRequestAdmin", verifyJwtToken, verifyAdmin, async (re
   try {
     const connection = await mysql2.createConnection(db);
     try {
-      const [rentRequests] = await connection.promise().query(getRentRequestsDataPending());
+      const [rentRequests] = await connection.promise().query(
+        `
+        SELECT
+          rent_requests.*,
+          bicycles.bicycle_name,
+          bicycles.cost_per_hour
+        FROM
+          rent_requests
+          JOIN bicycles ON rent_requests.bicycle_id = bicycles.bicycle_id
+        WHERE
+          rent_requests.request_status='Pending'
+        `
+      );
 
       return res.status(200).json({ message: "Pending rent requests fetched successfully", data: rentRequests });
     } 
@@ -89,6 +101,7 @@ router.post("/updateRentRequest", verifyJwtToken, verifyAdmin, async (req, res) 
       const [rentRequest] = await connection
         .promise()
         .query(`SELECT * FROM rent_requests WHERE request_id='${requestId}'`);
+      
       if (rentRequest.length === 0) {
         return res.status(404).json({ message: "Rent request not found" });
       }
@@ -114,6 +127,9 @@ router.post("/updateRentRequest", verifyJwtToken, verifyAdmin, async (req, res) 
                 rentalId,
                 rentRequest[0].user_id,
                 rentRequest[0].bicycle_id,
+
+                requestId, // Pass the requestId here
+
                 rentalStartDate,
                 rentalEndDate,
                 rentalCost,
@@ -168,9 +184,22 @@ router.get("/getPendingRentRequestUser", verifyJwtToken, async (req, res) => {
   try {
     const connection = await mysql2.createConnection(db);
     try {
+      // const [rentRequests] = await connection
+      //   .promise()
+      //   .query(`SELECT * FROM rent_requests WHERE user_id='${userId}' AND request_status='Pending'`);
       const [rentRequests] = await connection
         .promise()
-        .query(`SELECT * FROM rent_requests WHERE user_id='${userId}' AND request_status='Pending'`);
+        .query(`
+          SELECT
+            rent_requests.*,
+            bicycles.bicycle_name,
+            bicycles.cost_per_hour
+          FROM
+            rent_requests
+            JOIN bicycles ON rent_requests.bicycle_id = bicycles.bicycle_id
+          WHERE
+            rent_requests.user_id='${userId}' AND rent_requests.request_status='Pending'
+        `);
 
       return res.status(200).json({ message: "Pending rent requests fetched successfully", data: rentRequests });
     } 
@@ -195,7 +224,18 @@ router.get("/adminRequests", verifyJwtToken, verifyAdmin, async (req, res) => {
     try {
       const [adminRequests] = await connection
         .promise()
-        .query(`SELECT * FROM rent_requests WHERE request_status='Approved'`);
+        .query(
+          `
+          SELECT
+            rent_requests.*,
+            bicycles.bicycle_name
+          FROM
+            rent_requests
+            JOIN bicycles ON rent_requests.bicycle_id = bicycles.bicycle_id
+          WHERE
+            rent_requests.request_status='Approved'
+        `
+        );
 
       return res.status(200).json({ message: "Approved rent requests fetched successfully", data: adminRequests });
     } catch (error) {

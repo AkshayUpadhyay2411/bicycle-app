@@ -27,7 +27,9 @@ function PendingReturns() {
           <tr>
             <th>Return ID</th>
             <th>Rental ID</th>
-            <th>Return Date</th>
+            {/* <th>Return Date</th> */}
+            <th>Bicycle Name</th>
+            <th>Cost per hour</th>
             {/* Add more columns as needed */}
           </tr>
         </thead>
@@ -36,7 +38,9 @@ function PendingReturns() {
             <tr key={returnRequest.return_id}>
               <td>{returnRequest.return_id}</td>
               <td>{returnRequest.rental_id}</td>
-              <td>{returnRequest.return_date}</td>
+              {/* <td>{returnRequest.return_date}</td> */}
+              <td>{returnRequest.bicycle_name}</td>
+              <td>{returnRequest.cost_per_hour}</td>
               {/* Add more columns as needed */}
             </tr>
           ))}
