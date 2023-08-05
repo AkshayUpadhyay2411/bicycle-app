@@ -81,14 +81,14 @@ router.post("/updateRentRequest", verifyJwtToken, verifyAdmin, async (req, res) 
   const { requestId, requestStatus } = req.body; // can be Approved / Rejected 
   const adminId = req.id;
   const requestApprovedTime = Date.now();
-
+  
+  // console.log("no of requests with given id", requestId, requestStatus, rentRequest.length)
   try {
     const connection = await mysql2.createConnection(db);
     try {
       const [rentRequest] = await connection
         .promise()
         .query(`SELECT * FROM rent_requests WHERE request_id='${requestId}'`);
-
       if (rentRequest.length === 0) {
         return res.status(404).json({ message: "Rent request not found" });
       }
@@ -186,5 +186,27 @@ router.get("/getPendingRentRequestUser", verifyJwtToken, async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 });
+
+router.get("/adminRequests", verifyJwtToken, verifyAdmin, async (req, res) => {
+  const adminId = req.id;
+
+  try {
+    const connection = await mysql2.createConnection(db);
+    try {
+      const [adminRequests] = await connection
+        .promise()
+        .query(`SELECT * FROM rent_requests WHERE request_status='Approved'`);
+
+      return res.status(200).json({ message: "Approved rent requests fetched successfully", data: adminRequests });
+    } catch (error) {
+      return res.status(500).json({ message: "Internal server error" });
+    } finally {
+      connection.close();
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 
 export default router;

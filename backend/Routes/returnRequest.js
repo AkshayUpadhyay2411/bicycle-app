@@ -219,4 +219,33 @@ router.get( "/getPendingReturnRequestAdmin", verifyJwtToken, verifyAdmin, async 
   }
 );
 
+
+router.get("/getApprovedReturnRequests", verifyJwtToken, verifyAdmin, async (req, res) => {
+  try {
+    const connection = await mysql2.createConnection(db);
+    try {
+      const [approvedReturnRequests] = await connection
+        .promise()
+        .query(`
+           
+      `);
+
+
+      return res.status(200).json({
+        message: "Approved return requests fetched successfully",
+        data: approvedReturnRequests,
+      });
+    } catch (error) {
+      console.log("error -> ", error);
+      return res.status(500).json({ message: "Internal server error" });
+    } finally {
+      connection.close();
+    }
+  } catch (error) {
+    console.log("error connecting to database -> ", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
 export default router;

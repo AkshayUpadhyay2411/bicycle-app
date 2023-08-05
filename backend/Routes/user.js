@@ -47,6 +47,7 @@ router.post("/register", verifyUserDetails, async (req, res) => {
     password,
     usertype,
   } = req.body;
+  
   try {
     const connection = await mysql2.createConnection(db);
     try {

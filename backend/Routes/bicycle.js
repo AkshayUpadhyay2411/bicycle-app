@@ -10,7 +10,7 @@ router.post("/add", verifyJwtToken, async (req, res) => {
   const { bicycleName, costPerHour } = req.body;
   const addedByUserId = req.id;
   const createdTime  = Date.now();
-
+  console.log("bicycle details ->", bicycleName , costPerHour);
   try {
     const connection = await mysql2.createConnection(db);
     try {

@@ -6,5 +6,6 @@ export const verifyAdmin = (req, res, next) => {
     if(usertype !== "admin"){
         return res.status(403).send({ message: "invalid credentials" });
     }
+    // console.log(" user token at admin verfication-> ", req.user, req.usertype, req.id);
     next();
 };
