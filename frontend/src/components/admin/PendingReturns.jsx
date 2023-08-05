@@ -52,6 +52,9 @@ const PendingReturns = () => {
             <strong>Bicycle ID:</strong> {request.bicycle_id}
           </div>
           <div>
+            <strong>Bicycle Name: </strong> {request.bicycle_name}
+          </div>
+          <div>
             <strong>User ID:</strong> {request.user_id}
           </div>
           <Button onClick={() => handleApproveReturnRequest(request.return_id)} variant="success">

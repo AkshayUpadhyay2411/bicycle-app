@@ -14,7 +14,23 @@ router.get("/getRentedBicycleUser", verifyJwtToken, async (req, res) => {
     try {
       const [rentals] = await connection
         .promise()
-        .query(`SELECT * FROM rentals WHERE user_id='${userId}' AND status='rented'`);
+        .query(
+          `
+          SELECT
+            rentals.*,
+            bicycles.bicycle_name,
+            bicycles.cost_per_hour
+          FROM
+            rentals
+            JOIN bicycles ON rentals.bicycle_id = bicycles.bicycle_id
+          WHERE
+            rentals.user_id='${userId}'
+            AND rentals.status='rented'
+            AND rentals.rental_id NOT IN (
+              SELECT rental_id FROM return_requests WHERE return_status='Pending'
+            )
+        `
+        );
 
       return res
         .status(200)
@@ -31,6 +47,7 @@ router.get("/getRentedBicycleUser", verifyJwtToken, async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 router.get("/getCompletedRentsInfo", verifyJwtToken, async (req, res) => {
   const userId = req.id;

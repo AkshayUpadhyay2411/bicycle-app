@@ -14,7 +14,7 @@ router.post("/add", verifyJwtToken, async (req, res) => {
   try {
     const connection = await mysql2.createConnection(db);
     try {
-      const bicycleId = generateId(); 
+      const bicycleId = generateId();
       
       // by default available = true when inserted 
       await connection

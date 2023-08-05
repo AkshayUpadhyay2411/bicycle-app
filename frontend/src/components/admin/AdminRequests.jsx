@@ -28,8 +28,12 @@ const AdminRequests = () => {
         {adminRequests.map((request) => (
           <li key={request.request_id}>
             {/* Display details of each approved request */}
-            Request ID: {request.request_id}, Bicycle ID: {request.bicycle_id}, User ID: {request.user_id}
+            Request ID: {request.request_id} <br/>
+            Bicycle Name: {request.bicycle_name}<br/>
+            User ID: {request.user_id} <br/>
+            Request ID: {request.request_id}
           </li>
+
         ))}
       </ul>
     </div>

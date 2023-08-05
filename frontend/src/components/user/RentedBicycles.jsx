@@ -24,7 +24,8 @@ function RentedBicycles() {
       await returnBicycle(rentalId);
       // After successfully returning the bicycle, fetch the updated list of rented bicycles
       fetchRentedBicycles();
-    } catch (error) {
+    } 
+    catch (error) {
       console.log("Error returning the bicycle", error);
     }
   };
@@ -43,7 +44,7 @@ function RentedBicycles() {
         <tbody>
           {rentedBicycles.map((bicycle) => (
             <tr key={bicycle.rental_id}>
-              <td>{bicycle.bicycle_id}</td>
+              <td>{bicycle.bicycle_name}</td>
               <td>{bicycle.cost_per_hour}</td>
               <td>
                 <Button

@@ -77,8 +77,9 @@ const PendingRequests =() => {
             <th>Request ID</th>
             <th>User ID</th>
             <th>Bicycle ID</th>
-            <th>Start Time</th>
-            <th>End Time</th>
+            <th>Created Time</th>
+            {/* <th>End Time</th> */}
+            <th>Bicycle Name</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -89,7 +90,8 @@ const PendingRequests =() => {
               <td>{request.user_id}</td>
               <td>{request.bicycle_id}</td>
               <td>{convertTimestampToDateTime(request.request_date)}</td>
-              <td>{ request.request_approved_time && convertTimestampToDateTime(request.request_approved_time)}</td>
+              {/* <td>{ request.request_approved_time && convertTimestampToDateTime(request.request_approved_time)}</td> */}
+              <td>{request.bicycle_name}</td>
               <td>
                 <Button variant="success" onClick={() => handleApprove(request.request_id)}>
                   Approve
