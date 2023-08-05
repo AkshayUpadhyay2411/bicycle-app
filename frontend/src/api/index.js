@@ -97,7 +97,7 @@ export const logout = () => {
 // Function to get the user profile details
 export const getUserProfile = async () => {
   try {
-    const response = await authorizedApiClient.get("/profile");
+    const response = await authorizedApiClient.get("/user/profile");
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -272,6 +272,7 @@ export const getApprovedReturnRequests = async () => {
     throw error.response.data;
   }
 };
+
 
 // getPendingReturnRequestAdmin
 
