@@ -112,9 +112,9 @@ export const addBicycle = async (bicycleData) => {
     throw error.response.data;
   }
 };
-export const deleteBicycle = async (bicycleData) => {
+export const deleteBicycle = async (bicycleId) => {
   try {
-    const response = await authorizedApiClient.post("/bicycle/add", bicycleData);
+    const response = await authorizedApiClient.get("/bicycle/delete",{params:{bicycleId:bicycleId}});
     return response.data;
   } catch (error) {
     throw error.response.data;
