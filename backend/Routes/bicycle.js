@@ -93,5 +93,29 @@ router.get("/available", async (req, res) => {
 });
 
 
+router.get("/delete", verifyJwtToken, verifyAdmin, async (req, res) => {
+  try {
+    const bicycleId = req.query.bicycleid;
+    if (!bicycleId) {
+      return res.status(400).json({ message: "Bicycle ID is missing in the query parameters" });
+    }
+
+    const connection = await mysql2.createConnection(db);
+    try {
+      await connection.promise().query(`DELETE FROM bicycles WHERE bicycle_id = '${bicycleId}';
+      `);
+      connection.commit();
+      
+      return res.status(200).json({ message: "Bicycle deleted successfully" });
+    } catch (error) {
+      return res.status(500).json({ message: "Internal server error" });
+    } finally {
+      connection.close();
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 
 export default router;
