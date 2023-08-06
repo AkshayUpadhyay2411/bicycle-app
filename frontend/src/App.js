@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Route } from "react-router";
 import { BrowserRouter as Router, Routes } from "react-router-dom";
-
+import NotificationToaster from "./components/toast/NotificationToaster";
 import Header from "./components/common/Header";
 import NotFound from "./components/common/NotFound";
 import Profile from "./components/common/Profile";
@@ -73,6 +73,7 @@ function App() {
         {/* Not Found Route */}
         <Route element={NotFound} />
       </Routes>
+      <NotificationToaster />
     </Router>
   );
 }
