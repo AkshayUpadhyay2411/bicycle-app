@@ -57,7 +57,12 @@ router.get("/getCompletedRentsInfo", verifyJwtToken, async (req, res) => {
     try {
         const [completedRentals] = await connection
         .promise()
-        .query(`SELECT * FROM rentals WHERE user_id='${userId}' AND status='completed'`);
+        .query(`
+        SELECT rentals.*, bicycles.bicycle_name
+        FROM rentals
+        JOIN bicycles ON rentals.bicycle_id = bicycles.bicycle_id
+        WHERE rentals.user_id='${userId}' AND rentals.status='completed'
+      `);
 
       return res
         .status(200)
