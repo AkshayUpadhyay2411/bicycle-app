@@ -43,7 +43,7 @@ const createBicyclesTable = () => {
     added_by_user_id INT,
     cost_per_hour DECIMAL(10, 2) NOT NULL DEFAULT 0,
     created_time BIGINT NOT NULL,
-    FOREIGN KEY (added_by_user_id) REFERENCES users (id)
+    FOREIGN KEY (added_by_user_id) REFERENCES users (id) ON DELETE CASCADE
   )`;
 };
 
@@ -75,9 +75,9 @@ const createRentRequestsTable = () => {
     request_date BIGINT NOT NULL,
     request_approved_time BIGINT,
     approved_by_admin_id INT,
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (bicycle_id) REFERENCES bicycles (bicycle_id),
-    FOREIGN KEY (approved_by_admin_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (bicycle_id) REFERENCES bicycles (bicycle_id) ON DELETE CASCADE,
+    FOREIGN KEY (approved_by_admin_id) REFERENCES users (id) ON DELETE CASCADE
   )`;
 };
 
@@ -123,10 +123,10 @@ const createRentalsTable = () => {
     rental_end_date BIGINT,
     rental_cost DECIMAL(10, 2) DEFAULT 0,
     status ENUM('rented', 'completed') NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (bicycle_id) REFERENCES bicycles (bicycle_id),
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (bicycle_id) REFERENCES bicycles (bicycle_id) ON DELETE CASCADE,
 
-    FOREIGN KEY (request_id) REFERENCES rent_requests (request_id)
+    FOREIGN KEY (request_id) REFERENCES rent_requests (request_id) ON DELETE CASCADE
 
   )`;
 };
@@ -171,8 +171,8 @@ const createReturnRequestsTable = () => {
     request_created_time BIGINT NOT NULL,
     request_approved_time BIGINT,
     approved_by_admin_id INT,
-    FOREIGN KEY (rental_id) REFERENCES rentals (rental_id),
-    FOREIGN KEY (approved_by_admin_id) REFERENCES users (id)
+    FOREIGN KEY (rental_id) REFERENCES rentals (rental_id) ON DELETE CASCADE,
+    FOREIGN KEY (approved_by_admin_id) REFERENCES users (id) ON DELETE CASCADE
   )`;
 };
 
