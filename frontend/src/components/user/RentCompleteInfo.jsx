@@ -12,6 +12,7 @@ function RentCompleteInfo() {
   const fetchCompletedRentals = async () => {
     try {
       const response = await getCompletedRentsInfo();
+      console.log("complete rent info of the user ", response.data);
       setCompletedRentals(response.data);
     } catch (error) {
       console.error("Error fetching completed rentals:", error);
