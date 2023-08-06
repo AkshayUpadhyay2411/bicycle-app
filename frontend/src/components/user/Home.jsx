@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Button } from "react-bootstrap";
+import { Card, Button, Container } from "react-bootstrap";
 import { getAllBicycles, rentBicycle, getAvailableBicycles } from "../../api/index"; // Import the API functions
 import "./index.css";
 function Home() {
@@ -33,7 +33,7 @@ function Home() {
   }, []);
 
   return (
-    <div style={{padding:"20px"}}>
+    <Container>
      <Card
         className="text-center p-3 mb-4"
         style={{ boxShadow: "0px 4px 8px 0px rgba(0, 0, 0, 0.10)", borderRadius: "10px",border:"none" }}
@@ -69,7 +69,7 @@ function Home() {
           </Card>
         ))}
       </div>
-    </div>
+    </Container>
   );
 }
 

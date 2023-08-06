@@ -70,9 +70,12 @@ const PendingRequests =() => {
 
   return (
     <Container>
-      <h2>Pending Rent Requests</h2>
+    
       <Table striped bordered hover>
         <thead>
+        <tr>
+            <th colSpan="6"><h4 >Pending Rent Requests</h4></th>
+          </tr>
           <tr>
             <th>Request ID</th>
             <th>User ID</th>

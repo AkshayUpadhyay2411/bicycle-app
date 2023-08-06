@@ -21,9 +21,12 @@ function PendingReturns() {
 
   return (
     <Container>
-      <h2>Pending Return Requests</h2>
+     
       <Table striped bordered hover>
         <thead>
+        <tr>
+            <th colSpan="5"><h4 >Pending Return Requests</h4></th>
+          </tr>
           <tr>
             <th>Return ID</th>
             <th>Rental ID</th>

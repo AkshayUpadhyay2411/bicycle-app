@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Table } from "react-bootstrap";
 import { getCompletedRentsInfo } from "../../api/index";
 
-function RentCompleteInfo() {
+const RentCompleteInfo =() => {
   const [completedRentals, setCompletedRentals] = useState([]);
 
   useEffect(() => {
@@ -39,12 +39,14 @@ function RentCompleteInfo() {
 
   return (
     <Container>
-      <h2>Completed Rent Info</h2>
       <Table striped bordered hover>
         <thead>
           <tr>
+            <th colSpan="5"><h4 >Completed Rent Info</h4></th>
+          </tr>
+          <tr>
             <th>Rental ID</th>
-            <th>User ID</th>
+            <th>Bicycle</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Total Cost</th>
@@ -55,7 +57,7 @@ function RentCompleteInfo() {
           {completedRentals.map((rental) => (
             <tr key={rental.rental_id}>
               <td>{rental.rental_id}</td>
-              <td>{rental.user_id}</td>
+              <td>{rental.bicycle_name}</td>
               <td>{convertTimestampToDateTime(rental.rental_start_date)}</td>
               <td>{convertTimestampToDateTime(rental.rental_end_date)}</td>
               <td>{rental.rental_cost}</td>

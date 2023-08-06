@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
+import { Container, Table } from "react-bootstrap";
 import { getPendingRentRequestsUser } from "../../api/index";
 
 function PendingRequests() {
@@ -20,10 +20,13 @@ function PendingRequests() {
   };
 
   return (
-    <div>
-      <h2>Pending Requests</h2>
+    <Container>
+      
       <Table striped bordered hover>
         <thead>
+        <tr>
+            <th colSpan="5"><h4 >Pending Requests</h4></th>
+          </tr>
           <tr>
             <th>Request ID</th>
             <th>Bicycle Name</th>
@@ -45,7 +48,7 @@ function PendingRequests() {
           ))}
         </tbody>
       </Table>
-    </div>
+    </Container>
   );
 }
 

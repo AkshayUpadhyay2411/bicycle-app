@@ -1,6 +1,6 @@
-// AdminRequests.jsx
 import React, { useEffect, useState } from "react";
 import { getAdminRequests } from "../../api/index";
+import { Container, Table } from "react-bootstrap";
 
 const AdminRequests = () => {
   const [adminRequests, setAdminRequests] = useState([]);
@@ -22,21 +22,32 @@ const AdminRequests = () => {
   };
 
   return (
-    <div>
-      <h1>Approved Requests</h1>
-      <ul>
-        {adminRequests.map((request) => (
-          <li key={request.request_id}>
-            {/* Display details of each approved request */}
-            Request ID: {request.request_id} <br/>
-            Bicycle Name: {request.bicycle_name}<br/>
-            User ID: {request.user_id} <br/>
-            Request ID: {request.request_id}
-          </li>
-
-        ))}
-      </ul>
-    </div>
+    <Container>
+      
+      <Table striped bordered hover>
+        <thead>
+        <tr>
+            <th colSpan="4"><h4 >Approved Requests</h4></th>
+          </tr>
+          <tr>
+            <th>Request ID</th>
+            <th>Bicycle Name</th>
+            <th>User ID</th>
+            <th>Request ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          {adminRequests.map((request) => (
+            <tr key={request.request_id}>
+              <td>{request.request_id}</td>
+              <td>{request.bicycle_name}</td>
+              <td>{request.user_id}</td>
+              <td>{request.request_id}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </Container>
   );
 };
 

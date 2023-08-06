@@ -1,7 +1,7 @@
-// pendingReturns.jsx
 import React, { useEffect, useState } from "react";
 import { getPendingReturnRequestsAdmin, approveReturnRequest } from "../../api/index";
-import { Button, ListGroup } from "react-bootstrap";
+import { Button, Container, Table } from "react-bootstrap";
+
 const PendingReturns = () => {
   const [pendingReturns, setPendingReturns] = useState([]);
 
@@ -13,7 +13,7 @@ const PendingReturns = () => {
   const fetchPendingReturns = async () => {
     try {
       const data = await getPendingReturnRequestsAdmin();
-      console.log("peding return requests admin -> ", data.data);
+      console.log("pending return requests admin -> ", data.data);
       setPendingReturns(data.data);
     } catch (error) {
       // Handle error
@@ -37,33 +37,43 @@ const PendingReturns = () => {
   };
 
   return (
-    <div>
-    <h1>Pending Return Requests</h1>
-    <ListGroup>
-      {pendingReturns.map((request) => (
-        <ListGroup.Item key={request.return_id}>
-          <div>
-            <strong>Return ID:</strong> {request.return_id}
-          </div>
-          <div>
-            <strong>Rental ID:</strong> {request.rental_id}
-          </div>
-          <div>
-            <strong>Bicycle ID:</strong> {request.bicycle_id}
-          </div>
-          <div>
-            <strong>Bicycle Name: </strong> {request.bicycle_name}
-          </div>
-          <div>
-            <strong>User ID:</strong> {request.user_id}
-          </div>
-          <Button onClick={() => handleApproveReturnRequest(request.return_id)} variant="success">
-            Approve
-          </Button>
-        </ListGroup.Item>
-      ))}
-    </ListGroup>
-  </div>
+    <Container>
+  
+      <Table striped bordered hover>
+        <thead>
+        <tr>
+            <th colSpan="6"><h4 >Pending Return Requests</h4></th>
+          </tr>
+          <tr>
+            <th>Return ID</th>
+            <th>Rental ID</th>
+            <th>Bicycle ID</th>
+            <th>Bicycle Name</th>
+            <th>User ID</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pendingReturns.map((request) => (
+            <tr key={request.return_id}>
+              <td>{request.return_id}</td>
+              <td>{request.rental_id}</td>
+              <td>{request.bicycle_id}</td>
+              <td>{request.bicycle_name}</td>
+              <td>{request.user_id}</td>
+              <td>
+                <Button
+                  onClick={() => handleApproveReturnRequest(request.return_id)}
+                  variant="success"
+                >
+                  Approve
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </Container>
   );
 };
 

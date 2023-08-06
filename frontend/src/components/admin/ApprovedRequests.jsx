@@ -1,6 +1,6 @@
 // ApprovedRequests.jsx
 import React, { useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
+import { Container, Table } from "react-bootstrap";
 import { getApprovedReturnRequests } from "../../api/index";
 
 const ApprovedRequests = () => {
@@ -23,22 +23,25 @@ const ApprovedRequests = () => {
   };
 
   return (
-    <div>
-      <h1>Approved Return Requests</h1>
+    <Container>
+      
       <Table striped bordered hover>
         <thead>
+        <tr>
+            <th colSpan="11" ><h4 >Approved Return Requests</h4></th>
+          </tr>
           <tr>
             <th>Return ID</th>
             <th>Rental ID</th>
             <th>Request ID</th>
-            <th>Bicycle Name</th>
-            <th>User who Rented</th>
-            <th>Admin who Approved Rent Request</th>
-            <th>Admin who Approved Return Request</th>
+            <th>Bicycle</th>
+            <th>Borrowed By</th>
+            <th>Rent Request Approved By</th>
+            <th>Return Request Approved By</th>
             <th>Rent Request Approved Time</th>
             <th>Return Request Approved Time</th>
-            <th>Cost Per Hour</th>
-            <th>Total Cost Paid by User</th>
+            <th>Cost/Hour</th>
+            <th>Total Cost</th>
           </tr>
         </thead>
         <tbody>
@@ -59,7 +62,7 @@ const ApprovedRequests = () => {
           ))}
         </tbody>
       </Table>
-    </div>
+    </Container>
   );
 };
 
