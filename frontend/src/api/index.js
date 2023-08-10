@@ -21,6 +21,7 @@ export const authorizedApiClient = axios.create({
 export const unauthorizedApiClient = axios.create({
   baseURL: BASE_URL,
 });
+
 authorizedApiClient.interceptors.request.use(
   (config) => {
     // Get the JWT token from cookies or local storage (you can use whichever storage you are using)

@@ -23,12 +23,14 @@ router.get("/getRentedBicycleUser", verifyJwtToken, async (req, res) => {
           FROM
             rentals
             JOIN bicycles ON rentals.bicycle_id = bicycles.bicycle_id
+            JOIN rent_requests ON rentals.request_id = rent_requests.request_id
           WHERE
             rentals.user_id='${userId}'
             AND rentals.status='rented'
             AND rentals.rental_id NOT IN (
               SELECT rental_id FROM return_requests WHERE return_status='Pending'
             )
+            ORDER BY rent_requests.request_approved_time DESC
         `
         );
 
@@ -58,10 +60,12 @@ router.get("/getCompletedRentsInfo", verifyJwtToken, async (req, res) => {
         const [completedRentals] = await connection
         .promise()
         .query(`
-        SELECT rentals.*, bicycles.bicycle_name
+        SELECT rentals.*, bicycles.bicycle_name , bicycles.cost_per_hour
         FROM rentals
         JOIN bicycles ON rentals.bicycle_id = bicycles.bicycle_id
+        LEFT JOIN return_requests ON rentals.rental_id = return_requests.rental_id
         WHERE rentals.user_id='${userId}' AND rentals.status='completed'
+        ORDER BY return_requests.request_approved_time DESC
       `);
 
       return res

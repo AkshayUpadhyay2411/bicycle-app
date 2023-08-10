@@ -2,14 +2,12 @@ import React, { Suspense, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 import { register } from "../../api/index.js";
-
-
 import toast from "react-hot-toast";
-const successNotify=(message) =>toast.success(message);
+
+const successNotify = (message) => toast.success(message);
 const errorNotify = (message) => toast.error(message);
 
-
-const  Register = () =>{
+const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
@@ -18,6 +16,8 @@ const  Register = () =>{
     password: "",
     usertype: "user", // Default usertype is "user"
   });
+
+  const [waiting, setWaiting] = useState(false); // State for the spinner
 
   const handleChange = (event) => {
     setFormData({
@@ -28,16 +28,28 @@ const  Register = () =>{
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    setWaiting(true); // Set waiting to true when the registration request starts
+
     try {
       const response = await register(formData);
       console.log(response.message); // For testing purposes
       // Redirect to the login page after successful registration
-      successNotify("new account created");
+      successNotify("New account created");
       navigate("/login");
     } catch (error) {
-      errorNotify("Error!! account creation failed")
+      errorNotify("Error!! Account creation failed");
       console.error(error.message);
       // Handle registration error (e.g., show an error message)
+    } finally {
+      setWaiting(false); // Set waiting back to false when the request completes
+      setFormData({
+        firstName: "",
+        lastName: "",
+        username: "",
+        password: "",
+        usertype: "user",
+      });
     }
   };
 
@@ -47,7 +59,7 @@ const  Register = () =>{
         <Col md={6}>
           <Card className="mt-4 shadow">
             <Card.Body>
-              <h1>Register</h1>
+              <h1 className="text-center mb-4">Register</h1>
               <Form onSubmit={handleSubmit}>
                 <Row>
                   <Col>
@@ -114,11 +126,24 @@ const  Register = () =>{
                     />
                   </div>
                 </Form.Group>
-                <Button variant="primary" type="submit">
-                  Register
+                <Button
+                  variant="primary"
+                  type="submit"
+                  disabled={waiting}
+                  className="w-100"
+                >
+                  {waiting ? (
+                    <span
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                  ) : (
+                    "Register"
+                  )}
                 </Button>
               </Form>
-              <div className="mt-2">
+              <div className="mt-3 text-center">
                 Already have an account? <Link to="/login">Login</Link>
               </div>
             </Card.Body>
@@ -127,6 +152,6 @@ const  Register = () =>{
       </Row>
     </Container>
   );
-}
+};
 
 export default Register;

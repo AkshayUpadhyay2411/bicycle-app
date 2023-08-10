@@ -2,7 +2,7 @@ import express from "express";
 import {
   db,
   insertIntoReturnRequestsTable,
-  updateReturnRequestStatus
+  updateReturnRequestStatus,
 } from "../util/db.js";
 import mysql2 from "mysql2";
 import { verifyJwtToken } from "../middleware/verify_jwt_token.js";
@@ -13,15 +13,15 @@ import { generateId } from "../util/id.js";
 router.post("/addReturnRequest", verifyJwtToken, async (req, res) => {
   const { rentalId } = req.body;
   const requestCreatedTime = Date.now();
-  const userId = req.id; // can also be obtained from rental table using rentalId 
+  const userId = req.id; // can also be obtained from rental table using rentalId
 
   try {
     const connection = await mysql2.createConnection(db);
     try {
       const returnId = generateId();
       const returnStatus = "Pending";
-      
-      // add check if does not exist in rental table then invalid 
+
+      // add check if does not exist in rental table then invalid
 
       await connection
         .promise()
@@ -57,7 +57,11 @@ router.post("/addReturnRequest", verifyJwtToken, async (req, res) => {
   }
 });
 
-router.post("/validateReturnRequest", verifyJwtToken, verifyAdmin, async (req, res) => {
+router.post(
+  "/validateReturnRequest",
+  verifyJwtToken,
+  verifyAdmin,
+  async (req, res) => {
     const { returnId, requestStatus } = req.body; // can be Approved
     const adminId = req.id;
     const requestApprovedTime = Date.now();
@@ -118,21 +122,20 @@ router.post("/validateReturnRequest", verifyJwtToken, verifyAdmin, async (req, r
               `SELECT cost_per_hour FROM bicycles WHERE bicycle_id='${bicycleId}'`
             );
           const costPerHour = bicycle[0].cost_per_hour;
-          
+
           // Calculate rental_cost based on rental_start_date and rental_end_date
           const rentalEndDate = requestApprovedTime;
 
           const durationInMilliseconds = rentalEndDate - rentalStartDate;
           const durationInHours = durationInMilliseconds / (1000 * 60 * 60);
           const rentalCost = durationInHours * costPerHour;
-          
+
           // Update rental_cost in the rentals table
           await connection
             .promise()
             .query(
               `UPDATE rentals SET rental_cost=${rentalCost} WHERE rental_id='${returnRequest[0].rental_id}'`
             );
-
 
           // Make the bicycle available again
           await connection
@@ -169,26 +172,24 @@ router.get("/getPendingReturnRequestUser", verifyJwtToken, async (req, res) => {
   try {
     const connection = await mysql2.createConnection(db);
     try {
-      const [returnRequests] = await connection
-        .promise()
-        .query(
-          // `SELECT return_requests.*
-          // FROM return_requests
-          // JOIN rentals ON return_requests.rental_id = rentals.rental_id
-          // WHERE return_requests.return_status = 'Pending' AND rentals.user_id = '${userId}';`
-          `SELECT return_requests.*, bicycles.bicycle_name, bicycles.cost_per_hour
+      const [returnRequests] = await connection.promise().query(
+        // `SELECT return_requests.*
+        // FROM return_requests
+        // JOIN rentals ON return_requests.rental_id = rentals.rental_id
+        // WHERE return_requests.return_status = 'Pending' AND rentals.user_id = '${userId}';`
+        `SELECT return_requests.*, bicycles.bicycle_name, bicycles.cost_per_hour
           FROM return_requests
           JOIN rentals ON return_requests.rental_id = rentals.rental_id
           JOIN bicycles ON rentals.bicycle_id = bicycles.bicycle_id
-          WHERE return_requests.return_status = 'Pending' AND rentals.user_id = '${userId}';`
-        );
+          WHERE return_requests.return_status = 'Pending' AND rentals.user_id = '${userId}'
+          ORDER BY return_requests.request_created_time DESC;
+          ;`
+      );
 
-      return res
-        .status(200)
-        .json({
-          message: "Pending return requests fetched successfully",
-          data: returnRequests,
-        });
+      return res.status(200).json({
+        message: "Pending return requests fetched successfully",
+        data: returnRequests,
+      });
     } catch (error) {
       return res.status(500).json({ message: "Internal server error" });
     } finally {
@@ -199,7 +200,11 @@ router.get("/getPendingReturnRequestUser", verifyJwtToken, async (req, res) => {
   }
 });
 
-router.get( "/getPendingReturnRequestAdmin", verifyJwtToken, verifyAdmin, async (req, res) => {
+router.get(
+  "/getPendingReturnRequestAdmin",
+  verifyJwtToken,
+  verifyAdmin,
+  async (req, res) => {
     try {
       const connection = await mysql2.createConnection(db);
       try {
@@ -207,22 +212,31 @@ router.get( "/getPendingReturnRequestAdmin", verifyJwtToken, verifyAdmin, async 
           .promise()
           // .query('SELECT * FROM return_requests WHERE return_status="Pending" ORDER BY request_created_time DESC');
           .query(
+            `SELECT
+              return_requests.*,
+              bicycles.bicycle_id,
+              bicycles.bicycle_name,
+              rentals.user_id,
+              users.firstName,
+              users.lastName
+            FROM
+              return_requests
+            JOIN
+              rentals ON return_requests.rental_id = rentals.rental_id
+            JOIN
+              bicycles ON rentals.bicycle_id = bicycles.bicycle_id
+            JOIN
+              users ON rentals.user_id = users.id
+            WHERE
+              return_requests.return_status = 'Pending'
+            ORDER BY
+              return_requests.request_created_time DESC;`
+          );
 
-            `SELECT return_requests.*, bicycles.bicycle_id, bicycles.bicycle_name, rentals.user_id
-          FROM return_requests
-          JOIN rentals ON return_requests.rental_id = rentals.rental_id
-          JOIN bicycles ON rentals.bicycle_id = bicycles.bicycle_id
-          WHERE return_requests.return_status = 'Pending'
-          ORDER BY return_requests.request_created_time DESC`
-
-          )
-
-        return res
-          .status(200)
-          .json({
-            message: "Pending return requests fetched successfully",
-            data: returnRequests,
-          });
+        return res.status(200).json({
+          message: "Pending return requests fetched successfully",
+          data: returnRequests,
+        });
       } catch (error) {
         return res.status(500).json({ message: "Internal server error" });
       } finally {
@@ -234,59 +248,63 @@ router.get( "/getPendingReturnRequestAdmin", verifyJwtToken, verifyAdmin, async 
   }
 );
 
-
-router.get("/getApprovedReturnRequests", verifyJwtToken, verifyAdmin, async (req, res) => {
-  try {
-    const connection = await mysql2.createConnection(db);
+router.get(
+  "/getApprovedReturnRequests",
+  verifyJwtToken,
+  verifyAdmin,
+  async (req, res) => {
     try {
-      const [approvedReturnRequests] = await connection
-        .promise()
-        .query(`
+      const connection = await mysql2.createConnection(db);
+      try {
+        const [approvedReturnRequests] = await connection.promise().query(
+          `
         SELECT
-        return_requests.return_id,
-        return_requests.rental_id,
-        return_requests.return_status,
-        return_requests.request_created_time as return_created_time,
-        return_requests.request_approved_time as return_approved_time,
-        return_requests.approved_by_admin_id as return_approved_by_admin_id,
-        rent_requests.approved_by_admin_id as rent_approved_by_admin_id,
-        rent_requests.request_date as rent_created_time,
-        rent_requests.request_approved_time as rent_approved_time,
-        rentals.user_id,
-        rentals.bicycle_id,
-        rentals.rental_cost,
-        rent_requests.request_id,
-        users.firstName,
-        users.lastName,
-        users.username,
-        bicycles.bicycle_name,
-        bicycles.cost_per_hour
-      FROM
-        return_requests
-        JOIN rentals ON return_requests.rental_id = rentals.rental_id
-        JOIN rent_requests ON rentals.request_id = rent_requests.request_id
-        JOIN users ON rentals.user_id = users.id
-        JOIN bicycles ON rentals.bicycle_id = bicycles.bicycle_id
-      WHERE
-        return_requests.return_status = 'Approved'
-      `);
+          return_requests.return_id,
+          return_requests.request_created_time,
+          return_requests.request_approved_time,
 
+          rentals.rental_id,
+          rentals.rental_cost,
+          
+          rentals.user_id,
+          user_requested.firstName AS request_user_firstName,
+          user_requested.lastName AS request_user_lastName,
+          
+          return_requests.approved_by_admin_id,
+          admin_approved.firstName AS granted_by_firstName,
+          admin_approved.lastName AS granted_by_lastName,
 
-      return res.status(200).json({
-        message: "Approved return requests fetched successfully",
-        data: approvedReturnRequests,
-      });
+          bicycles.bicycle_id,
+          bicycles.bicycle_name,
+          bicycles.cost_per_hour
+
+        FROM
+          return_requests
+          JOIN rentals ON return_requests.rental_id = rentals.rental_id
+          JOIN users AS user_requested ON rentals.user_id = user_requested.id
+          JOIN users AS admin_approved ON return_requests.approved_by_admin_id = admin_approved.id
+          JOIN bicycles ON rentals.bicycle_id = bicycles.bicycle_id
+        WHERE
+          return_requests.return_status='Approved'
+        ORDER BY return_requests.request_approved_time DESC;
+        `
+        );
+
+        return res.status(200).json({
+          message: "Approved return requests fetched successfully",
+          data: approvedReturnRequests,
+        });
+      } catch (error) {
+        console.log("error -> ", error);
+        return res.status(500).json({ message: "Internal server error" });
+      } finally {
+        connection.close();
+      }
     } catch (error) {
-      console.log("error -> ", error);
+      console.log("error connecting to database -> ", error);
       return res.status(500).json({ message: "Internal server error" });
-    } finally {
-      connection.close();
     }
-  } catch (error) {
-    console.log("error connecting to database -> ", error);
-    return res.status(500).json({ message: "Internal server error" });
   }
-});
-
+);
 
 export default router;

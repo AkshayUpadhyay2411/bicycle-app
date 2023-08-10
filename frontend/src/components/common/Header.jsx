@@ -6,37 +6,47 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import './index.css';
-import {logout, getUserProfile} from "../../api/index";
+import "./index.css";
+import { logout, getUserProfile } from "../../api/index";
 import Cookies from "js-cookie";
+import userImg from "../../images/user.png";
+
 function Header({ isAuthenticated, setIsAuthenticated }) {
-  const handleLogout= () =>{
+  const handleLogout = () => {
     setIsAuthenticated(false);
-     logout();
-  }
+    logout();
+  };
   const [userDetails, setUserDetails] = useState(null);
-  const getUserDetails = async() =>{
+  const getUserDetails = async () => {
     try {
       const response = await getUserProfile();
       setUserDetails(response.data);
-      console.log("profile data -> ",response.data); // For testing purposes
+      console.log("profile data -> ", response.data); // For testing purposes
     } catch (error) {
       console.error(error.message);
     }
-  }
-  useEffect(()=>{
-    if(isAuthenticated){
+  };
+  useEffect(() => {
+    if (isAuthenticated) {
       getUserDetails();
     }
-  },[isAuthenticated]);
+  }, [isAuthenticated]);
   return (
     <>
-      <Navbar key="lg" expand="lg" className="mb-3 nav" style={{ padding: "15px 30px" }}>
+      <Navbar
+        key="lg"
+        expand="lg"
+        className="mb-3 nav"
+        style={{ padding: "15px 30px" }}
+      >
         <Container>
+          
           <Navbar.Brand as={Link} to="/">
             Bicycle Renting App
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbar-nav" />
+            
+          
           <Navbar.Offcanvas
             id={`offcanvasNavbar-expand-lg`}
             aria-labelledby={`offcanvasNavbarLabel-expand-lg`}
@@ -48,19 +58,21 @@ function Header({ isAuthenticated, setIsAuthenticated }) {
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-              <Nav className="ml-auto">
+              <Nav  style={{width:"100%"}} className="ml-auto d-flex justify-content-between align-items-center">
+                
                 {!isAuthenticated && (
-                  <>
+                  <div style={{display:"flex", flexDirection:"row"}}>
                     <Nav.Link as={Link} to="/login">
                       Login
                     </Nav.Link>
                     <Nav.Link as={Link} to="/register">
                       Register
                     </Nav.Link>
-                  </>
+                    </div>
                 )}
                 {isAuthenticated && (
                   <>
+                  <div style={{display:"flex",flexDirection:"row",float:"right"}}>
                     <NavDropdown title="Bicycle">
                       <NavDropdown.Item as={Link} to="/add-bicycle">
                         Add Bicycle
@@ -95,37 +107,52 @@ function Header({ isAuthenticated, setIsAuthenticated }) {
                         </NavDropdown.Item>
                       )}
                     </NavDropdown>
-                    <Nav.Link>
-                    <span className="mr-2">Hello, {userDetails?userDetails.firstName + " " + userDetails.lastName:"John"}</span>
-                    </Nav.Link>
-                    <NavDropdown title={
-                      <>
-                        <div className="d-flex align-items-center">
-                     
-                      <img
-                        src="https://via.placeholder.com/30" // Replace this with the URL of the user's profile avatar
-                        alt="Profile Avatar"
-                        className="rounded-circle"
-                        style={{ width: "30px", height: "30px" }}
-                      />
                     </div>
-                      </>
-                    }>
-                      <NavDropdown.Item as={Link} to="/profile">
-                        My Profile
-                      </NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/edit/profile">
-                        Edit profile
-                      </NavDropdown.Item>
-                      <NavDropdown.Item as={Link} to="/report/bug">
-                        Report a bug
-                      </NavDropdown.Item>
-                      <NavDropdown.Divider />
-                      <NavDropdown.Item as={Button} variant="outline-success" onClick={handleLogout}>
-                        Logout
-                      </NavDropdown.Item>
-                    </NavDropdown>
                   
+                    <div style={{display:"flex",flexDirection:"row",float:"right"}}>
+
+                      <NavDropdown
+                        title={
+                          <>
+                            <div className="d-flex align-items-center">
+                              <img
+                                // src="https://via.placeholder.com/30" // Replace this with the URL of the user's profile avatar
+                                src = {userImg}
+                                alt="Profile Avatar"
+                                className="rounded-circle"
+                                style={{ width: "30px", height: "30px" }}
+                              />
+                            </div>
+                          </>
+                        }
+                      >
+                        <NavDropdown.Item as={Link} to="/profile">
+                          My Profile
+                        </NavDropdown.Item>
+                        {/* <NavDropdown.Item as={Link} to="/edit/profile">
+                          Edit profile
+                        </NavDropdown.Item> */}
+                        {/* <NavDropdown.Item as={Link} to="/report/bug">
+                          Report a bug
+                        </NavDropdown.Item> */}
+                        <NavDropdown.Divider />
+                        <NavDropdown.Item
+                          as={Button}
+                          variant="outline-success"
+                          onClick={handleLogout}
+                        >
+                          Logout
+                        </NavDropdown.Item>
+                      </NavDropdown>
+                      <Nav.Link>
+                        <span className="mr-2">
+                          Hello,{" "}
+                          {userDetails
+                            ? userDetails.firstName + " " + userDetails.lastName
+                            : "John"}
+                        </span>
+                      </Nav.Link>
+                    </div>
                   </>
                 )}
               </Nav>

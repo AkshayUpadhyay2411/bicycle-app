@@ -3,13 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { Form, Button, Container, Row, Col, Card } from "react-bootstrap";
 import { login } from "../../api/index.js";
 import Cookies from "js-cookie";
-
 import toast from "react-hot-toast";
-const successNotify=(message) =>toast.success(message);
+
+const successNotify = (message) => toast.success(message);
 const errorNotify = (message) => toast.error(message);
 
 const Login = ({ setIsAuthenticated, setUserType }) => {
-  console.log("set ", setIsAuthenticated);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
@@ -28,18 +27,15 @@ const Login = ({ setIsAuthenticated, setUserType }) => {
     event.preventDefault();
     try {
       const response = await login(formData);
-      console.log(response.message); // For testing purposes
-      // Redirect to the home page or dashboard after successful login
       setIsAuthenticated(true);
-      successNotify("login successful");
+      successNotify("Login successful");
       Cookies.set("usertype", formData.usertype, { expires: 7 });
       Cookies.set("user", formData.username, { expires: 7 });
       setUserType(formData.usertype);
       navigate("/");
     } catch (error) {
-      errorNotify("login failed")
+      errorNotify("Login failed");
       console.error(error.message);
-      // Handle login error (e.g., show an error message)
     }
   };
 
@@ -49,7 +45,7 @@ const Login = ({ setIsAuthenticated, setUserType }) => {
         <Col md={6}>
           <Card className="mt-4 shadow">
             <Card.Body>
-              <h1>Login</h1>
+              <h1 className="text-center mb-4">Login</h1>
               <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="username">
                   <Form.Label>Username</Form.Label>
@@ -109,4 +105,3 @@ const Login = ({ setIsAuthenticated, setUserType }) => {
 };
 
 export default Login;
-  

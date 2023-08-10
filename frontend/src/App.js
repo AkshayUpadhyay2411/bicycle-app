@@ -22,54 +22,102 @@ import PendingAdminReturns from "./components/admin/PendingReturns";
 import AdminRequests from "./components/admin/AdminRequests";
 import ApprovedRequests from "./components/admin/ApprovedRequests";
 import Cookies from "js-cookie";
+import HomePageCarousel from "./components/common/HomePageCarousel";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userType, setUserType] = useState(null);
-  useEffect(()=>{
-    if(Cookies.get("token")){
+  useEffect(() => {
+    if (Cookies.get("token")) {
       setIsAuthenticated(true);
-    }else{
+    } else {
       setIsAuthenticated(false);
     }
-    if(Cookies.get("usertype")){
+    if (Cookies.get("usertype")) {
       setUserType(Cookies.get("usertype"));
     }
-  },[]);
-  
-  const handleUserChange =(user, type)=>{
+  }, []);
+
+  const handleUserChange = (user, type) => {
     setUserType(type);
     setIsAuthenticated(user);
-  }
+  };
   return (
     <Router>
-      <Header isAuthenticated={isAuthenticated} setIsAuthenticated={handleUserChange}/>
+      <Header
+        isAuthenticated={isAuthenticated}
+        setIsAuthenticated={handleUserChange}
+      />
       <Routes>
         {/* Public Routes */}
         <Route exact path="/register" element={<Register />} />
-        <Route exact path="/login"  element={<Login setIsAuthenticated={handleUserChange} setUserType={setUserType}/>} />
-        <Route exact path="/add-bicycle" element={<AddBicycle/>} />
-        <Route exact path="/profile" element={<Profile/>} />
-
+        <Route
+          exact
+          path="/login"
+          element={
+            <Login
+              setIsAuthenticated={handleUserChange}
+              setUserType={setUserType}
+            />
+          }
+        />
         {
-          userType && userType==="user" && <>
-            <Route exact path="/" element={<UserHome/>} />
-            <Route exact path="/pending-requests" element={<PendingRequests/>} />
-            <Route exact path="/rented-bicycles" element={<RentedBicycles/>} />
-            <Route exact path="/pending-returns" element={<PendingReturns/>} />
-            <Route exact path="/rent-complete-info" element={<RentCompleteInfo/>} />
+          !userType && (
+            <>
+              <Route exact path="/" element={<HomePageCarousel />} />
             </>
+          )
         }
-
-        {
-          userType && userType==="admin" && <>
-          <Route exact path="/" element={<AdminHome/>} />
-          <Route exact path="/pending-requests" element={<PendingAdminRequests/>} />
-          <Route exact path="/pending-returns" element={<PendingAdminReturns/>} />
-          <Route exact path="/approved-requests" element={<AdminRequests/>} />
-          <Route exact path="/approved-returns" element={<ApprovedRequests/>} />  
+        {userType && (
+          <>
+            <Route exact path="/add-bicycle" element={<AddBicycle />} />
+            <Route exact path="/profile" element={<Profile />} />
           </>
-        }
+        )}
+
+        {userType && userType === "user" && (
+          <>
+            <Route exact path="/" element={<UserHome />} />
+            <Route
+              exact
+              path="/pending-requests"
+              element={<PendingRequests />}
+            />
+            <Route exact path="/rented-bicycles" element={<RentedBicycles />} />
+            <Route exact path="/pending-returns" element={<PendingReturns />} />
+            <Route
+              exact
+              path="/rent-complete-info"
+              element={<RentCompleteInfo />}
+            />
+          </>
+        )}
+
+        {userType && userType === "admin" && (
+          <>
+            <Route exact path="/" element={<AdminHome />} />
+            <Route
+              exact
+              path="/pending-requests"
+              element={<PendingAdminRequests />}
+            />
+            <Route
+              exact
+              path="/pending-returns"
+              element={<PendingAdminReturns />}
+            />
+            <Route
+              exact
+              path="/approved-requests"
+              element={<AdminRequests />}
+            />
+            <Route
+              exact
+              path="/approved-returns"
+              element={<ApprovedRequests />}
+            />
+          </>
+        )}
         {/* Not Found Route */}
         <Route element={NotFound} />
       </Routes>

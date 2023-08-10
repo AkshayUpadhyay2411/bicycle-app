@@ -54,16 +54,36 @@ router.get("/all", verifyJwtToken , verifyAdmin , async (req, res) => { // for a
   try {
     const connection = await mysql2.createConnection(db);
     try {
-      const [bicycles] = await connection.promise().query(getAllBicyclesData());
+      // const [bicycles] = await connection.promise().query(getAllBicyclesData());
+      const [bicycles] = await connection.promise().query(
+        `
+        SELECT 
+          bicycles.bicycle_id, 
+          bicycles.bicycle_name, 
+          bicycles.available, 
+          bicycles.added_by_user_id,
+          bicycles.cost_per_hour,
+          bicycles.created_time,
+          users.firstName AS added_by_firstName,
+          users.lastName AS added_by_lastName,
+          users.username AS added_by_username,
+          users.usertype AS added_by_usertype
+        FROM bicycles
+        LEFT JOIN users ON bicycles.added_by_user_id = users.id
+        ORDER BY bicycles.created_time DESC
+      `
+      );
 
       return res
         .status(200)
         .json({ message: "Bicycles fetched successfully", data: bicycles });
     } 
     catch (error) {
+      // console.log(error)
       return res.status(500).json({ message: "Internal server error" });
     } 
     finally {
+      // console.log(error)
       connection.close();
     }
   } 
@@ -76,7 +96,7 @@ router.get("/available", async (req, res) => {
   try {
     const connection = await mysql2.createConnection(db);
     try {
-      const [bicycles] = await connection.promise().query(`SELECT * FROM bicycles WHERE available=true`);
+      const [bicycles] = await connection.promise().query(`SELECT * FROM bicycles WHERE available=true ORDER BY created_time DESC`);
 
       return res.status(200).json({ message: "Available bicycles fetched successfully", data: bicycles });
     } 

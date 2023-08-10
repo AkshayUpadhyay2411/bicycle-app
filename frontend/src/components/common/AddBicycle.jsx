@@ -3,10 +3,11 @@ import { Container, Form, Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { addBicycle } from "../../api/index";
 import toast from "react-hot-toast";
-const successNotify=(message) =>toast.success(message);
+
+const successNotify = (message) => toast.success(message);
 const errorNotify = (message) => toast.error(message);
 
-const  AddBicycle= () => {
+const AddBicycle = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     bicycleName: "",
@@ -39,36 +40,34 @@ const  AddBicycle= () => {
 
   return (
     <Container>
-      <Card className="mt-4 shadow">
-        <Card.Body>
-          <h1>Add Bicycle</h1>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="bicycleName">
-              <Form.Label>Bicycle Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="bicycleName"
-                value={formData.bicycleName}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group controlId="costPerHour">
-              <Form.Label>Cost Per Hour</Form.Label>
-              <Form.Control
-                type="number"
-                name="costPerHour"
-                value={formData.costPerHour}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Button variant="primary" type="submit">
-              Add Bicycle
-            </Button>
-          </Form>
-        </Card.Body>
+      <Card className="mt-4 shadow p-4">
+        <h1 className="mb-4">Add Bicycle</h1>
+        <Form onSubmit={handleSubmit}>
+          <Form.Group controlId="bicycleName">
+            <Form.Label>Bicycle Name</Form.Label>
+            <Form.Control
+              type="text"
+              name="bicycleName"
+              value={formData.bicycleName}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group controlId="costPerHour">
+            <Form.Label>Cost Per Hour</Form.Label>
+            <Form.Control
+              type="number"
+              name="costPerHour"
+              value={formData.costPerHour}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            Add Bicycle
+          </Button>
+        </Form>
       </Card>
     </Container>
   );
-}
+};
 
 export default AddBicycle;
