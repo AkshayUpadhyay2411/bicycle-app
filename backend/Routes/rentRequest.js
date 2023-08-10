@@ -3,7 +3,6 @@ import {
   db,
   insertIntoRentRequestsTable,
   updateRentRequestStatus,
-  // getRentRequestsDataPending,
   insertIntoRentalsTable,
 } from "../util/db.js";
 
@@ -215,9 +214,6 @@ router.get("/getPendingRentRequestUser", verifyJwtToken, async (req, res) => {
   try {
     const connection = await mysql2.createConnection(db);
     try {
-      // const [rentRequests] = await connection
-      //   .promise()
-      //   .query(`SELECT * FROM rent_requests WHERE user_id='${userId}' AND request_status='Pending'`);
       const [rentRequests] = await connection.promise().query(`
           SELECT
             rent_requests.*,
@@ -259,19 +255,6 @@ router.get("/adminRequests", verifyJwtToken, verifyAdmin, async (req, res) => {
     const connection = await mysql2.createConnection(db);
     try {
       const [adminRequests] = await connection.promise().query(
-        //   `
-        //   SELECT
-        //   rent_requests.*,
-        //   bicycles.bicycle_name,
-        //   users.firstName AS requested_by_firstName,
-        //   users.lastName AS requested_by_lastName,   // comma here is wrong 
-        // FROM
-        //   rent_requests
-        //   JOIN bicycles ON rent_requests.bicycle_id = bicycles.bicycle_id
-        //   JOIN users ON rent_requests.user_id = users.id
-        // WHERE
-        //   rent_requests.request_status='Approved';
-        // `
         `
         SELECT
           rent_requests.*,

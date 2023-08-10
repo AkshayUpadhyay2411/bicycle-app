@@ -105,7 +105,9 @@ const PendingReturns = () => {
                 <td>{`${request.firstName} ${request.lastName}`}</td>
                 <td>{request.bicycle_id}</td>
                 <td>{request.bicycle_name}</td>
-                <td>{convertTimestampToDateTime(request.request_created_time)}</td>
+                <td>
+                  {convertTimestampToDateTime(request.request_created_time)}
+                </td>
                 <td>
                   <Button
                     variant="outline-success"

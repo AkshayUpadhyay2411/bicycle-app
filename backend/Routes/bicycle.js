@@ -54,7 +54,6 @@ router.get("/all", verifyJwtToken , verifyAdmin , async (req, res) => { // for a
   try {
     const connection = await mysql2.createConnection(db);
     try {
-      // const [bicycles] = await connection.promise().query(getAllBicyclesData());
       const [bicycles] = await connection.promise().query(
         `
         SELECT 
@@ -79,11 +78,11 @@ router.get("/all", verifyJwtToken , verifyAdmin , async (req, res) => { // for a
         .json({ message: "Bicycles fetched successfully", data: bicycles });
     } 
     catch (error) {
-      // console.log(error)
+      // console.log(error);
       return res.status(500).json({ message: "Internal server error" });
     } 
     finally {
-      // console.log(error)
+      // console.log(error);
       connection.close();
     }
   } 

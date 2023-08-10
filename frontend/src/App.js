@@ -61,13 +61,11 @@ function App() {
             />
           }
         />
-        {
-          !userType && (
-            <>
-              <Route exact path="/" element={<HomePageCarousel />} />
-            </>
-          )
-        }
+        {!userType && (
+          <>
+            <Route exact path="/" element={<HomePageCarousel />} />
+          </>
+        )}
         {userType && (
           <>
             <Route exact path="/add-bicycle" element={<AddBicycle />} />

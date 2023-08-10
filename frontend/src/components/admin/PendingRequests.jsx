@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card , Container, Table, Button } from "react-bootstrap";
+import { Card, Container, Table, Button } from "react-bootstrap";
 import {
   getPendingRentRequestsAdmin,
   approveRentRequest,
@@ -75,7 +75,11 @@ const PendingRequests = () => {
     <Container>
       <Card
         className="text-center p-3 mb-4"
-        style={{ boxShadow: "0px 4px 8px 0px rgba(0, 0, 0, 0.10)", borderRadius: "10px",border:"none" }}
+        style={{
+          boxShadow: "0px 4px 8px 0px rgba(0, 0, 0, 0.10)",
+          borderRadius: "10px",
+          border: "none",
+        }}
       >
         <div className="main-heading">Pending Rent Requests</div>
       </Card>

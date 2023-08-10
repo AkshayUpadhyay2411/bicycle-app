@@ -40,13 +40,11 @@ function Header({ isAuthenticated, setIsAuthenticated }) {
         style={{ padding: "15px 30px" }}
       >
         <Container>
-          
           <Navbar.Brand as={Link} to="/">
             Bicycle Renting App
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbar-nav" />
-            
-          
+
           <Navbar.Offcanvas
             id={`offcanvasNavbar-expand-lg`}
             aria-labelledby={`offcanvasNavbarLabel-expand-lg`}
@@ -58,66 +56,79 @@ function Header({ isAuthenticated, setIsAuthenticated }) {
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-              <Nav  style={{width:"100%"}} className="ml-auto d-flex justify-content-between align-items-center">
-                
+              <Nav
+                style={{ width: "100%" }}
+                className="ml-auto d-flex justify-content-between align-items-center"
+              >
                 {!isAuthenticated && (
-                  <div style={{display:"flex", flexDirection:"row"}}>
+                  <div style={{ display: "flex", flexDirection: "row" }}>
                     <Nav.Link as={Link} to="/login">
                       Login
                     </Nav.Link>
                     <Nav.Link as={Link} to="/register">
                       Register
                     </Nav.Link>
-                    </div>
+                  </div>
                 )}
                 {isAuthenticated && (
                   <>
-                  <div style={{display:"flex",flexDirection:"row",float:"right"}}>
-                    <NavDropdown title="Bicycle">
-                      <NavDropdown.Item as={Link} to="/add-bicycle">
-                        Add Bicycle
-                      </NavDropdown.Item>
-                      {Cookies.get("usertype") === "user" && (
-                        <NavDropdown.Item as={Link} to="/rented-bicycles">
-                          Rented Bicycles
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        float: "right",
+                      }}
+                    >
+                      <NavDropdown title="Bicycle">
+                        <NavDropdown.Item as={Link} to="/add-bicycle">
+                          Add Bicycle
                         </NavDropdown.Item>
-                      )}
-                    </NavDropdown>
-                    <NavDropdown title="Requests">
-                      <NavDropdown.Item as={Link} to="/pending-requests">
-                        Pending Requests
-                      </NavDropdown.Item>
-                      {Cookies.get("usertype") === "admin" && (
-                        <NavDropdown.Item as={Link} to="/approved-requests">
-                          Approved requests
+                        {Cookies.get("usertype") === "user" && (
+                          <NavDropdown.Item as={Link} to="/rented-bicycles">
+                            Rented Bicycles
+                          </NavDropdown.Item>
+                        )}
+                      </NavDropdown>
+                      <NavDropdown title="Requests">
+                        <NavDropdown.Item as={Link} to="/pending-requests">
+                          Pending Requests
                         </NavDropdown.Item>
-                      )}
-                    </NavDropdown>
-                    <NavDropdown title="Returns">
-                      <NavDropdown.Item as={Link} to="/pending-returns">
-                        Pending Returns
-                      </NavDropdown.Item>
-                      {Cookies.get("usertype") === "user" ? (
-                        <NavDropdown.Item as={Link} to="/rent-complete-info">
-                          Returns
+                        {Cookies.get("usertype") === "admin" && (
+                          <NavDropdown.Item as={Link} to="/approved-requests">
+                            Approved requests
+                          </NavDropdown.Item>
+                        )}
+                      </NavDropdown>
+                      <NavDropdown title="Returns">
+                        <NavDropdown.Item as={Link} to="/pending-returns">
+                          Pending Returns
                         </NavDropdown.Item>
-                      ) : (
-                        <NavDropdown.Item as={Link} to="/approved-returns">
-                          Approved Returns
-                        </NavDropdown.Item>
-                      )}
-                    </NavDropdown>
+                        {Cookies.get("usertype") === "user" ? (
+                          <NavDropdown.Item as={Link} to="/rent-complete-info">
+                            Returns
+                          </NavDropdown.Item>
+                        ) : (
+                          <NavDropdown.Item as={Link} to="/approved-returns">
+                            Approved Returns
+                          </NavDropdown.Item>
+                        )}
+                      </NavDropdown>
                     </div>
-                  
-                    <div style={{display:"flex",flexDirection:"row",float:"right"}}>
 
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        float: "right",
+                      }}
+                    >
                       <NavDropdown
                         title={
                           <>
                             <div className="d-flex align-items-center">
                               <img
                                 // src="https://via.placeholder.com/30" // Replace this with the URL of the user's profile avatar
-                                src = {userImg}
+                                src={userImg}
                                 alt="Profile Avatar"
                                 className="rounded-circle"
                                 style={{ width: "30px", height: "30px" }}

@@ -173,10 +173,6 @@ router.get("/getPendingReturnRequestUser", verifyJwtToken, async (req, res) => {
     const connection = await mysql2.createConnection(db);
     try {
       const [returnRequests] = await connection.promise().query(
-        // `SELECT return_requests.*
-        // FROM return_requests
-        // JOIN rentals ON return_requests.rental_id = rentals.rental_id
-        // WHERE return_requests.return_status = 'Pending' AND rentals.user_id = '${userId}';`
         `SELECT return_requests.*, bicycles.bicycle_name, bicycles.cost_per_hour
           FROM return_requests
           JOIN rentals ON return_requests.rental_id = rentals.rental_id

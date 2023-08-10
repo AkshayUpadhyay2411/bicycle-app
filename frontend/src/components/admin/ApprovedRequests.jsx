@@ -1,6 +1,6 @@
 // ApprovedRequests.jsx
 import React, { useEffect, useState } from "react";
-import { Card , Container, Table } from "react-bootstrap";
+import { Card, Container, Table } from "react-bootstrap";
 import { getApprovedReturnRequests } from "../../api/index";
 import NoContent from "../common/NoContent";
 const ApprovedRequests = () => {
@@ -25,18 +25,18 @@ const ApprovedRequests = () => {
   const convertTimestampToDateTime = (timestamp) => {
     // Create a new Date object from the timestamp (in milliseconds)
     const date = new Date(timestamp);
-  
+
     // Get the year, month, day, hours, minutes, and seconds from the date object
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1 and pad with leading zero if necessary
-    const day = String(date.getDate()).padStart(2, '0'); // Pad with leading zero if necessary
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-  
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based, so add 1 and pad with leading zero if necessary
+    const day = String(date.getDate()).padStart(2, "0"); // Pad with leading zero if necessary
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+
     // Combine the year, month, day, hours, minutes, and seconds to form the date-time string in the format "YYYY-MM-DD HH:MM:SS"
     const dateTimeString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  
+
     return dateTimeString;
   };
 
@@ -44,7 +44,11 @@ const ApprovedRequests = () => {
     <Container>
       <Card
         className="text-center p-3 mb-4"
-        style={{ boxShadow: "0px 4px 8px 0px rgba(0, 0, 0, 0.10)", borderRadius: "10px",border:"none" }}
+        style={{
+          boxShadow: "0px 4px 8px 0px rgba(0, 0, 0, 0.10)",
+          borderRadius: "10px",
+          border: "none",
+        }}
       >
         <div className="main-heading">Approved Return Requests</div>
       </Card>
@@ -85,10 +89,14 @@ const ApprovedRequests = () => {
                 <td>{`${request.request_user_firstName} ${request.request_user_lastName}`}</td>
                 <td>{request.bicycle_id}</td>
                 <td>{request.bicycle_name}</td>
-                <td>{convertTimestampToDateTime(request.request_created_time)}</td>
+                <td>
+                  {convertTimestampToDateTime(request.request_created_time)}
+                </td>
                 <td>{request.approved_by_admin_id}</td>
                 <td>{`${request.granted_by_firstName} ${request.granted_by_lastName}`}</td>
-                <td>{convertTimestampToDateTime(request.request_approved_time)}</td>
+                <td>
+                  {convertTimestampToDateTime(request.request_approved_time)}
+                </td>
                 <td>{request.cost_per_hour}</td>
                 <td>{request.rental_cost}</td>
               </tr>

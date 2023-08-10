@@ -105,10 +105,6 @@ const updateRentRequestStatus = (
     WHERE request_id = '${requestId}'`;
 };
 
-// const getRentRequestsDataPending = () => {
-//   return 'SELECT * FROM rent_requests WHERE request_status="Pending" ORDER BY request_date DESC';
-// };
-
 // RENTALS ------------------------------------------
 
 const createRentalsTable = () => {
@@ -143,11 +139,6 @@ const insertIntoRentalsTable = (
   rentalCost,
   rentalStatus
 ) => {
-//   return `INSERT INTO rentals 
-//     (rental_id, user_id, bicycle_id, rental_start_date, rental_end_date, rental_cost, status) 
-//     VALUES 
-//     ('${rentalId}', ${userId}, '${bicycleId}', ${rentalStartDate}, ${rentalEndDate}, ${rentalCost}, '${rentalStatus}')`;
-// };
 return `INSERT INTO rentals 
     (rental_id, user_id, bicycle_id, request_id, rental_start_date, rental_end_date, rental_cost, status) 
     VALUES 
@@ -214,7 +205,6 @@ export {
   createRentRequestsTable,
   insertIntoRentRequestsTable,
   updateRentRequestStatus,
-  // getRentRequestsDataPending,
 
   createRentalsTable,
   insertIntoRentalsTable,
